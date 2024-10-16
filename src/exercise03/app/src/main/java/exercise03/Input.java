@@ -35,11 +35,15 @@ public class Input implements AutoCloseable {
   }
 
   private int getInt() {
-    while (!scanner.hasNextInt()) {
+    int age = 0;
+    if (scanner.hasNextInt()) {
+      age = scanner.nextInt();
+    } else {
       System.err.println("Couldn't parse a number. Please, try again");
       scanner.next();
+      age = getInt();
     }
-    return scanner.nextInt();
+    return age;
   }
 
   private int getAge() throws Exception {
@@ -59,19 +63,21 @@ public class Input implements AutoCloseable {
   }
 
   public List<Animal> getPets() throws Exception {
+    int count = getCount();
+    return IntStream.range(0, count)
+        .mapToObj(i -> getPet())
+        .filter(Objects::nonNull)
+        .collect(Collectors.toList());
+  }
+
+  private Animal getPet() {
+    Animal pet = null;
     try {
-      int count = getCount();
-      return IntStream.range(0, count).mapToObj(i -> {
-        try {
-          return initPet(getAnimalType(), getName(), getAge());
-        } catch (Exception e) {
-          System.err.println(e.getMessage());
-          return null;
-        }
-      }).filter(Objects::nonNull).collect(Collectors.toList());
+      pet = initPet(getAnimalType(), getName(), getAge());
     } catch (Exception e) {
-      throw e;
+      System.err.println(e.getMessage());
     }
+    return pet;
   }
 
   private Animal initPet(String animal, String name, int age) {

@@ -18,7 +18,9 @@ public abstract class Animal {
   }
 
   public void addAge() {
-    age++;
+    if (getAge() > 10) {
+      age++;
+    }
   }
 
   public String toString() {

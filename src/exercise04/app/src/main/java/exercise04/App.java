@@ -20,14 +20,10 @@ public class App {
   }
 
   public static void printPets(List<Animal> pets) {
-    for (Animal pet : pets) {
-      System.out.println(pet.toString());
-    }
+    pets.stream().forEach(System.out::println);
   }
 
-  public static void increaseAgeOfOldAnimals(List<Animal> animals) {
-    animals.stream()
-        .filter(animal -> animal.getAge() > 10)
-        .forEach(animal -> animal.addAge());
+  public static void increaseAgeOfOldAnimals(List<Animal> pets) {
+    pets.stream().forEach(Animal::addAge);
   }
 }
