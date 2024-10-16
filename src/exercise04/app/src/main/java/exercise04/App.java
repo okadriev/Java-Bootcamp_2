@@ -5,25 +5,31 @@ package exercise04;
 
 import java.util.Locale;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class App {
   public static void main(String[] args) {
     Locale.setDefault(Locale.US);
+    ExecutorService executor = Executors.newCachedThreadPool();
+    PetWalker petWalker = new PetWalker();
+
     try (Input input = new Input()) {
       List<Animal> pets = input.getPets();
-      increaseAgeOfOldAnimals(pets);
-      printPets(pets);
+      pets.forEach(pet -> executor.submit(() -> petWalker.walkPet(pet)));
+      waitForCompletion(executor);
 
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
     } catch (Exception e) {
       System.err.println(e.getMessage());
     }
   }
 
-  public static void printPets(List<Animal> pets) {
-    pets.stream().forEach(System.out::println);
-  }
-
-  public static void increaseAgeOfOldAnimals(List<Animal> pets) {
-    pets.stream().forEach(Animal::addAge);
+  private static void waitForCompletion(ExecutorService executor) throws InterruptedException {
+    executor.shutdown();
+    while (!executor.isTerminated()) {
+      Thread.sleep(10);
+    }
   }
 }

@@ -1,11 +1,8 @@
-package exercise03;
+package exercise05;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
-import java.util.stream.IntStream;
-import java.util.stream.Collectors;
-import java.util.Objects;
 
 public class Input implements AutoCloseable {
   private Scanner scanner;
@@ -20,10 +17,17 @@ public class Input implements AutoCloseable {
 
   public List<Animal> getPets() throws Exception {
     int count = getCount();
-    return IntStream.range(0, count)
-        .mapToObj(i -> getPet())
-        .filter(Objects::nonNull)
-        .collect(Collectors.toList());
+    List<Animal> pets = new ArrayList<>();
+
+    for (int i = 0; i < count; i++) {
+      try {
+        pets.add(getPet());
+      } catch (Exception e) {
+        System.err.println(e.getMessage());
+      }
+    }
+
+    return pets;
   }
 
   private int getInt() {
@@ -58,20 +62,16 @@ public class Input implements AutoCloseable {
     return count;
   }
 
-  private Animal getPet() {
+  private Animal getPet() throws Exception {
     String animalType = getString();
     Animal pet = null;
 
-    try {
-      if (animalType.equals("cat")) {
-        pet = new Cat(getName(), getAge());
-      } else if (animalType.equals("dog")) {
-        pet = new Dog(getName(), getAge());
-      } else {
-        System.err.println("Incorrect input. Unsupported pet type");
-      }
-    } catch (Exception e) {
-      System.err.println(e.getMessage());
+    if (animalType.equals("cat")) {
+      pet = new Cat(getName(), getAge());
+    } else if (animalType.equals("dog")) {
+      pet = new Dog(getName(), getAge());
+    } else {
+      throw new Exception("Incorrect input. Unsupported pet type");
     }
 
     return pet;

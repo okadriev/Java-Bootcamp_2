@@ -2,10 +2,7 @@ package exercise04;
 
 import java.util.List;
 import java.util.Scanner;
-
-import java.util.stream.IntStream;
-import java.util.stream.Collectors;
-import java.util.Objects;
+import java.util.ArrayList;
 
 public class Input implements AutoCloseable {
   private Scanner scanner;
@@ -18,32 +15,35 @@ public class Input implements AutoCloseable {
     scanner.close();
   }
 
+  public List<Animal> getPets() throws Exception {
+    int count = getCount();
+    List<Animal> pets = new ArrayList<>();
+
+    for (int i = 0; i < count; i++) {
+      try {
+        pets.add(getPet());
+      } catch (Exception e) {
+        System.err.println(e.getMessage());
+      }
+    }
+
+    return pets;
+  }
+
+  private int getInt() {
+    while (!scanner.hasNextInt()) {
+      System.err.println("Couldn't parse a number. Please, try again");
+      scanner.next();
+    }
+    return scanner.nextInt();
+  }
+
   private String getString() {
     return scanner.next();
   }
 
   private String getName() {
     return getString();
-  }
-
-  private String getAnimalType() throws Exception {
-    String animal = getString();
-    if (!animal.contains("cat") && !animal.contains("dog")) {
-      throw new Exception("Incorrect input. Unsupported pet type");
-    }
-    return animal;
-  }
-
-  private int getInt() {
-    int age = 0;
-    if (scanner.hasNextInt()) {
-      age = scanner.nextInt();
-    } else {
-      System.err.println("Couldn't parse a number. Please, try again");
-      scanner.next();
-      age = getInt();
-    }
-    return age;
   }
 
   private int getAge() throws Exception {
@@ -62,31 +62,18 @@ public class Input implements AutoCloseable {
     return count;
   }
 
-  public List<Animal> getPets() throws Exception {
-    int count = getCount();
-    return IntStream
-        .range(0, count)
-        .mapToObj(i -> getPet())
-        .collect(Collectors.toList());
-  }
-
-  private Animal getPet() {
+  private Animal getPet() throws Exception {
+    String animalType = getString();
     Animal pet = null;
-    try {
-      pet = initPet(getAnimalType(), getName(), getAge());
-    } catch (Exception e) {
-      System.err.println(e.getMessage());
-    }
-    return pet;
-  }
 
-  private Animal initPet(String animal, String name, int age) {
-    Animal pet = null;
-    if (animal.contains("cat")) {
-      pet = new Cat(name, age);
-    } else if (animal.contains("dog")) {
-      pet = new Dog(name, age);
+    if (animalType.equals("cat")) {
+      pet = new Cat(getName(), getAge());
+    } else if (animalType.equals("dog")) {
+      pet = new Dog(getName(), getAge());
+    } else {
+      throw new Exception("Incorrect input. Unsupported pet type");
     }
+
     return pet;
   }
 }

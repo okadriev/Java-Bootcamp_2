@@ -1,5 +1,7 @@
 package exercise04;
 
+import java.util.concurrent.TimeUnit;
+
 public class Cat extends Animal {
   public Cat(String name, int age) {
     super(name, age);
@@ -8,5 +10,18 @@ public class Cat extends Animal {
   @Override
   public String toString() {
     return super.toString();
+  }
+
+  @Override
+  public double goToWalk() {
+    double walkTime = getAge() * 0.25;
+
+    try {
+      TimeUnit.SECONDS.sleep(Math.round(walkTime));
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+    }
+
+    return walkTime;
   }
 }

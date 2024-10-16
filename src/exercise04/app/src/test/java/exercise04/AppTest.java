@@ -11,10 +11,10 @@ import org.junit.jupiter.api.Test;
 class AppTest {
   @Test
   void testAllDogs() {
-    String input = "3 dog Snowball 12 dog Snowball2 8 dog Snowball3 10";
-    String expectedOutput = "Dog name = Snowball, age = 13\n" +
-        "Dog name = Snowball2, age = 8\n" +
-        "Dog name = Snowball3, age = 10\n";
+    String input = "3  dog  Snowball  12  dog  Snowball2  8  dog  Snowball3  10";
+    String expectedOutput = "Dog name = Snowball2, age = 8, start time = 0.00, end time = 4.00\n" +
+        "Dog name = Snowball3, age = 10, start time = 0.00, end time = 5.00\n" +
+        "Dog name = Snowball, age = 12, start time = 0.00, end time = 6.00\n";
 
     ByteArrayInputStream inputStream = new ByteArrayInputStream(input.getBytes());
     System.setIn(inputStream);
@@ -30,9 +30,9 @@ class AppTest {
   @Test
   void testMixedPets() {
     String input = "3  dog  Snowball  8  cat  Kitty  9  dog  Balloon  9";
-    String expectedOutput = "Dog name = Snowball, age = 8\n" +
-        "Cat name = Kitty, age = 9\n" +
-        "Dog name = Balloon, age = 9\n";
+    String expectedOutput = "Cat name = Kitty, age = 9, start time = 0.00, end time = 2.25\n" +
+        "Dog name = Snowball, age = 8, start time = 0.00, end time = 4.00\n" +
+        "Dog name = Balloon, age = 9, start time = 0.00, end time = 4.50\n";
 
     ByteArrayInputStream inputStream = new ByteArrayInputStream(input.getBytes());
     System.setIn(inputStream);
@@ -49,8 +49,8 @@ class AppTest {
   void testIncorrectInputs() {
     String input = "4  hamster  cat  Kitty  -10  dog  Balloon  10  cat  Fura  9";
 
-    String expectedOutput = "Dog name = Balloon, age = 10\n" +
-        "Cat name = Fura, age = 9\n";
+    String expectedOutput = "Cat name = Fura, age = 9, start time = 0.01, end time = 2.26\n" +
+        "Dog name = Balloon, age = 10, start time = 0.01, end time = 5.01\n";
     String expectedErrorOutput = "Incorrect input. Unsupported pet type\n" +
         "Incorrect input. Age <= 0\n";
 

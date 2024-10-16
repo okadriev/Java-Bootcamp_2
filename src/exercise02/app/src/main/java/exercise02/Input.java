@@ -15,16 +15,19 @@ public class Input implements AutoCloseable {
     scanner.close();
   }
 
-  private String getString() {
-    return scanner.next();
-  }
+  public List<Animal> getPets() throws Exception {
+    int count = getCount();
+    List<Animal> pets = new ArrayList<>();
 
-  private String getAnimalType() throws Exception {
-    String animal = getString();
-    if (!animal.contains("cat") && !animal.contains("dog") && !animal.contains("guinea") && !animal.contains("hamster")) {
-      throw new Exception("Incorrect input. Unsupported pet type");
+    for (int i = 0; i < count; i++) {
+      try {
+        pets.add(getPet());
+      } catch (Exception e) {
+        System.err.println(e.getMessage());
+      }
     }
-    return animal;
+
+    return pets;
   }
 
   private int getInt() {
@@ -33,6 +36,14 @@ public class Input implements AutoCloseable {
       scanner.next();
     }
     return scanner.nextInt();
+  }
+
+  private String getString() {
+    return scanner.next();
+  }
+
+  private String getName() {
+    return getString();
   }
 
   private int getAge() throws Exception {
@@ -51,56 +62,20 @@ public class Input implements AutoCloseable {
     return count;
   }
 
-  // private double getDouble() {
-  // while (!scanner.hasNextDouble()) {
-  // System.err.println("Couldn't parse a number. Please, try again");
-  // scanner.next();
-  // }
-  // return scanner.nextDouble();
-  // }
-
-  // private double getWeight() throws Exception {
-  // double weight = getDouble();
-  // if (weight <= 0) {
-  // throw new Exception("Incorrect input. Mass <= 0");
-  // }
-  // return weight;
-  // }
-
-  public List<Animal> getPets() throws Exception {
-    try {
-      int count = getCount();
-      List<Animal> pets = new ArrayList<Animal>();
-
-      for (int i = 0; i < count; i++) {
-        try {
-          String animal = getAnimalType();
-          String name = getString();
-          int age = getAge();
-          pets.add(initPet(animal, name, age));
-
-        } catch (Exception e1) {
-          System.err.println(e1.getMessage());
-          continue;
-        }
-      }
-      return pets;
-
-    } catch (Exception e2) {
-      throw e2;
-    }
-  }
-
-  private Animal initPet(String animal, String name, int age) {
+  private Animal getPet() throws Exception {
+    String animalType = getString();
     Animal pet = null;
-    if (animal.contains("cat")) {
-      pet = new Cat(name, age);
-    } else if (animal.contains("dog")) {
-      pet = new Dog(name, age);
-    } else if (animal.contains("guinea")) {
-      pet = new GuineaPig(name, age);
-    } else if (animal.contains("hamster")) {
-      pet = new Hamster(name, age);
+
+    if (animalType.equals("cat")) {
+      pet = new Cat(getName(), getAge());
+    } else if (animalType.equals("dog")) {
+      pet = new Dog(getName(), getAge());
+    } else if (animalType.equals("guinea")) {
+      pet = new GuineaPig(getName(), getAge());
+    } else if (animalType.equals("hamster")) {
+      pet = new Hamster(getName(), getAge());
+    } else {
+      throw new Exception("Incorrect input. Unsupported pet type");
     }
 
     return pet;

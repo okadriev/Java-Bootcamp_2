@@ -3,12 +3,26 @@
  */
 package exercise05;
 
-public class App {
-    public String getGreeting() {
-        return "Hello World!";
-    }
+import java.util.Locale;
+import java.util.List;
 
-    public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+public class App {
+  public static void main(String[] args) {
+    Locale.setDefault(Locale.US);
+
+    try (Input input = new Input()) {
+      List<Animal> pets = input.getPets();
+      printPets(pets);
+
+    } catch (Exception e) {
+      System.err.println(e.getMessage());
     }
+  }
+
+  public static void printPets(List<Animal> pets) {
+    AnimalIterator animals = new AnimalIterator(pets);
+    while (animals.hasNext()) {
+      System.out.println(animals.next());
+    }
+  }
 }

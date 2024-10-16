@@ -15,16 +15,19 @@ public class Input implements AutoCloseable {
     scanner.close();
   }
 
-  private String getString() {
-    return scanner.next();
-  }
+  public List<Animal> getPets() throws Exception {
+    int count = getCount();
+    List<Animal> pets = new ArrayList<>();
 
-  private String getAnimalName() throws Exception {
-    String animal = getString();
-    if (!animal.equalsIgnoreCase("cat") && !animal.equalsIgnoreCase("dog")) {
-      throw new Exception("Incorrect input. Unsupported pet type");
+    for (int i = 0; i < count; i++) {
+      try {
+        pets.add(getPet());
+      } catch (Exception e) {
+        System.err.println(e.getMessage());
+      }
     }
-    return animal;
+
+    return pets;
   }
 
   private int getInt() {
@@ -35,24 +38,8 @@ public class Input implements AutoCloseable {
     return scanner.nextInt();
   }
 
-  private int getAge() throws Exception {
-    int age = getInt();
-
-    if (age <= 0) {
-      throw new Exception("Incorrect input. Age <= 0");
-    }
-
-    return age;
-  }
-
-  private int getCount() throws Exception {
-    int count = getInt();
-
-    if (count <= 0) {
-      throw new Exception("Incorrect input. Count <= 0");
-    }
-
-    return count;
+  private String getString() {
+    return scanner.next();
   }
 
   private double getDouble() {
@@ -65,39 +52,44 @@ public class Input implements AutoCloseable {
 
   private double getWeight() throws Exception {
     double weight = getDouble();
-
     if (weight <= 0) {
       throw new Exception("Incorrect input. Mass <= 0");
     }
-
     return weight;
   }
 
-  public List<Animal> getPets() throws Exception {
-    try {
-      int count = getCount();
-      List<Animal> pets = new ArrayList<Animal>();
+  private String getName() {
+    return getString();
+  }
 
-      for (int i = 0; i < count; i++) {
-        try {
-          String animal = getAnimalName();
-          String name = getString();
-          int age = getAge();
-          double weight = getWeight();
-          Animal pet = animal.equalsIgnoreCase("cat") ? new Cat(name, age, weight) : new Dog(name, age, weight);
-
-          pets.add(pet);
-
-        } catch (Exception e1) {
-          System.err.println(e1.getMessage());
-          continue;
-        }
-      }
-
-      return pets;
-
-    } catch (Exception e2) {
-      throw e2;
+  private int getAge() throws Exception {
+    int age = getInt();
+    if (age <= 0) {
+      throw new Exception("Incorrect input. Age <= 0");
     }
+    return age;
+  }
+
+  private int getCount() throws Exception {
+    int count = getInt();
+    if (count <= 0) {
+      throw new Exception("Incorrect input. Count <= 0");
+    }
+    return count;
+  }
+
+  private Animal getPet() throws Exception {
+    String animalType = getString();
+    Animal pet = null;
+
+    if (animalType.equals("cat")) {
+      pet = new Cat(getName(), getAge(), getWeight());
+    } else if (animalType.equals("dog")) {
+      pet = new Dog(getName(), getAge(), getWeight());
+    } else {
+      throw new Exception("Incorrect input. Unsupported pet type");
+    }
+
+    return pet;
   }
 }

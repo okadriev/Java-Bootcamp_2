@@ -1,4 +1,4 @@
-package exercise03;
+package exercise05;
 
 public abstract class Animal {
   private String name;
