@@ -7,6 +7,13 @@ import java.util.Scanner;
 public class Input implements AutoCloseable {
   private Scanner scanner;
 
+  private enum PetType {
+    CAT,
+    DOG,
+    GUINEA,
+    HAMSTER
+  }
+
   public Input() {
     scanner = new Scanner(System.in);
   }
@@ -63,19 +70,29 @@ public class Input implements AutoCloseable {
   }
 
   private Animal getPet() throws Exception {
-    String animalType = getString();
-    Animal pet = null;
-
-    if (animalType.equals("cat")) {
-      pet = new Cat(getName(), getAge());
-    } else if (animalType.equals("dog")) {
-      pet = new Dog(getName(), getAge());
-    } else if (animalType.equals("guinea")) {
-      pet = new GuineaPig(getName(), getAge());
-    } else if (animalType.equals("hamster")) {
-      pet = new Hamster(getName(), getAge());
-    } else {
+    PetType petType = null;
+    try {
+      petType = PetType.valueOf(getString().toUpperCase());
+    } catch (IllegalArgumentException e) {
       throw new Exception("Incorrect input. Unsupported pet type");
+    }
+
+    String name = getName();
+    int age = getAge();
+    Animal pet = null;
+    switch (petType) {
+      case CAT:
+        pet = new Cat(name, age);
+        break;
+      case DOG:
+        pet = new Dog(name, age);
+        break;
+      case GUINEA:
+        pet = new GuineaPig(name, age);
+        break;
+      case HAMSTER:
+        pet = new Hamster(name, age);
+        break;
     }
 
     return pet;
